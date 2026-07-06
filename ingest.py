@@ -1,8 +1,11 @@
 from pathlib import Path
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 path = Path("laravel-docs")
 
@@ -20,8 +23,7 @@ for file in path.glob("**/*.md"):
 chunk_method = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
 chunks = chunk_method.split_documents(docs)
 
-embeddings = HuggingFaceEmbeddings(
-    model_name = "sentence-transformers/all-MiniLM-L6-v2"
-)
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-chroma = Chroma.from_documents(documents = chunks, embedding = embeddings, persist_directory="./chroma_db")
+store = Chroma.from_documents(documents=chunks, embedding=embeddings, persist_directory="./chroma_db")
+print(f"Embedded {len(chunks)} chunks into ./chroma_db")

@@ -1,8 +1,20 @@
+import os
+
 import streamlit as st
 from dotenv import load_dotenv
 from query import build_pipeline, answer_question
 
+# Local dev: read the key from a .env file into environment variables.
 load_dotenv()
+
+# Cloud (Streamlit Community Cloud): there is no .env file. The key lives in
+# Streamlit's secrets. Copy it into the environment so ChatGoogleGenerativeAI,
+# which reads GOOGLE_API_KEY from the environment, can find it. Wrapped in
+# try/except because st.secrets raises when no secrets file exists (local dev).
+try:
+    os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+except Exception:
+    pass
 
 st.set_page_config(
     page_title="DocuMind — Laravel Docs Assistant",

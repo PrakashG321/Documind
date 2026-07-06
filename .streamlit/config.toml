@@ -1,0 +1,6 @@
+[server]
+# Disable the source file-watcher. In production we don't need hot-reload,
+# and the watcher walks every imported module — which forces transformers to
+# eagerly import vision models (zoedepth) that require torchvision. We don't
+# use those; turning the watcher off avoids the ModuleNotFoundError.
+fileWatcherType = "none"
